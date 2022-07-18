@@ -1,11 +1,22 @@
 #pragma once
 #include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <iostream>
 #include <vector>
+#include "glm/glm.hpp"
+#include <sstream>
+#include <cmath>
+#include <vector>
+#include <map>
+#include <string>
+#include "Grid.h"
+
 
 class ColliderComponent;
 class AssetManager;
 //class UIStatistics;
+class Grid;
 
 class Game
 
@@ -18,14 +29,13 @@ public:
 	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 	
 	void loadAssets();
-	void loadMap();
-	void createPlayer();
-	void setCamera();
 	void handleEvents();
 	void update();
 	bool running() { return isRunning; }
 	void render();
 	void clean();
+
+	Grid * grid;
 
 	static SDL_Renderer *renderer;
 	static SDL_Event event;

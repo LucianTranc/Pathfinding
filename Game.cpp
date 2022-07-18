@@ -1,9 +1,4 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
 #include "Game.h"
-#include <sstream>
-#include <cmath>
 
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
@@ -49,33 +44,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	loadAssets();
-	
-	loadMap();
-	
-	createPlayer();
-
-	setCamera();
+	grid->zeroGrid();
+	grid->randomizeGrid();
 	
 }
 
 void Game::loadAssets()
 {
-
-}
-
-void Game::loadMap()
-{
-
-}
-
-void Game::createPlayer()
-{
-
-}
-
-void Game::setCamera()
-{
-
+	grid = new Grid(0, 0, 800, 600, 80, 60);
 }
 
 
@@ -96,14 +72,18 @@ void Game::handleEvents()
 void Game::update()
 {
 
+	//grid->randomizeGrid();
 
 }
 
 
 void Game::render() 
 {
+    SDL_SetRenderDrawColor( Game::renderer, 255, 255, 255, 255 );
+
 	SDL_RenderClear(renderer);
 
+	grid->draw();
 
 	SDL_RenderPresent(renderer);
 }
