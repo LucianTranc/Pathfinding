@@ -7,15 +7,6 @@ Grid::Grid(int x, int y, int w, int h, int grid_x, int grid_y) : gridArray(grid_
     size = vec2(w, h);
     gridSize = vec2(grid_x, grid_y);
 
-    addColour("white", vec4(255, 255, 255, 255));
-    addColour("black", vec4(0, 0, 0, 0));
-    addColour("red", vec4(255, 0, 0, 0));
-    addColour("green", vec4(0, 255, 0, 0));
-    addColour("yellow", vec4(255, 255, 0, 0));
-    addColour("cyan", vec4(0, 255, 255, 0));
-    addColour("pink", vec4(255, 0, 255, 0));
-    addColour("blue", vec4(0, 0, 255, 0));
-
     srand(time(0));
 
 }
@@ -63,13 +54,13 @@ void Grid::printGrid()
 
 }
 
-void Grid::addColour(string name, vec4 rgba)
+void Grid::setRandomPositionToColour(Colour colour)
 {
-    Colour colour = {name, rgba};
-    colourMap.insert({(int)colourMap.size(), colour});
+    gridArray[rand() % (int)(gridSize.x)][rand() % (int)(gridSize.y)] = colour;
 }
 
-void Grid::draw()
+
+void Grid::draw(SDL_Renderer * renderer)
 {
     vec2 cellSize = vec2(size.x/gridSize.x, size.y/gridSize.y);
 
@@ -86,11 +77,11 @@ void Grid::draw()
 
             //std::cout<<"x: "<<r.x<<", y: "<<r.y<<", w: "<<r.w<<", h: "<<r.h<<std::endl;
             
-            Colour colour = colourMap[gridArray[i][j]];
+            vec4 colour = colourMap[(Colour)gridArray[i][j]];
 
-            SDL_SetRenderDrawColor( Game::renderer, colour.rgba.r, colour.rgba.g, colour.rgba.b, colour.rgba.a);
+            SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.a);
             
-            SDL_RenderFillRect(Game::renderer, &r );
+            SDL_RenderFillRect(renderer, &r );
 
         }
     }

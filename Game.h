@@ -10,13 +10,9 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "Grid.h"
+#include "MazeManager.h"
 
-
-class ColliderComponent;
-class AssetManager;
-//class UIStatistics;
-class Grid;
+class MazeManager;
 
 class Game
 
@@ -35,24 +31,14 @@ public:
 	void render();
 	void clean();
 
-	Grid * grid;
+	MazeManager * mazeManager;
 
 	static SDL_Renderer *renderer;
 	static SDL_Event event;
 	static bool isRunning;
-	static SDL_Rect camera;
-	static AssetManager *assets;
-	//static UIStatistics *statManager;
-	enum groupLabels : std::size_t
-	{
-		groupMap,
-		groupPlayers,
-		groupColliders,
-		groupProjectiles,
-		groupUILables
-	};
+
 private:
-	//int cnt;
+
 	SDL_Window* window;
 
 };

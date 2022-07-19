@@ -2,8 +2,6 @@
 
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
-
-SDL_Rect Game::camera = { 0, 0, 800*2, 640*2 };
 	
 bool Game::isRunning = false;
 
@@ -44,14 +42,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	loadAssets();
-	grid->zeroGrid();
-	grid->randomizeGrid();
 	
 }
 
 void Game::loadAssets()
 {
-	grid = new Grid(0, 0, 800, 600, 80, 60);
+	mazeManager = new MazeManager();
 }
 
 
@@ -72,7 +68,7 @@ void Game::handleEvents()
 void Game::update()
 {
 
-	//grid->randomizeGrid();
+	mazeManager->update();
 
 }
 
@@ -83,7 +79,7 @@ void Game::render()
 
 	SDL_RenderClear(renderer);
 
-	grid->draw();
+	mazeManager->draw(renderer);
 
 	SDL_RenderPresent(renderer);
 }

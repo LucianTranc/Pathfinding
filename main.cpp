@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include "Game.h"
 #include <iostream>
-using namespace std;
 
 Game* game = nullptr;
 
@@ -29,8 +28,6 @@ int main(int argc, char* argv[]) {
 
 		frameTime = SDL_GetTicks() - frameStart;
 
-		//frameTime is the time it takes for one iteration of the game loop to complete
-		//if frameTime is less than the frameDekay that we specified then we must delay the game loop by the difference
 		if (frameDelay > frameTime) {
 			SDL_Delay(frameDelay - frameTime);
 		}
