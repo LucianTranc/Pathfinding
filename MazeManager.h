@@ -12,6 +12,7 @@
 
 using std::string;
 using std::vector;
+using std::pair;
 
 #define GLM_ENABLE_EXPERIMENTAL
 using glm::vec2;
@@ -26,8 +27,12 @@ public:
     MazeManager();
     void draw(SDL_Renderer * renderer);
     void update();
-
+    void start();
+    void computeFrontierCells(pair<int, int> cell);
+    bool popRandomFrontierCell(pair<int, int> * outCell);
+    void makePassage(pair<int, int> frontierCell);
 
 private:
     Grid * grid;
+    vector<pair<int, int>> frontierCells;
 };

@@ -10,6 +10,7 @@
 
 using std::string;
 using std::vector;
+using std::pair;
 
 #define GLM_ENABLE_EXPERIMENTAL
 using glm::vec2;
@@ -19,16 +20,19 @@ class Grid {
 
 public:
 
-    enum Colour { white, black, red, green, blue } ;
+    enum State {passage, blocked, frontier, activeCell} ;
 
     Grid(int x, int y, int w, int h, int grid_x, int grid_y);
     void setGridArray(vector<vector<int>> array);
-	void zeroGrid();
+	void setGridToState(State state);
 	void randomizeGrid();
-	void setPositionToColour(int x, int y, Colour colour);
-	void setRandomPositionToColour(Colour colour);
+	bool setPositionToState(int x, int y, State state);
+	pair<int, int> setRandomPositionToState(State state);
+    bool isStateAtPosition(int x, int y, State state);
 	void draw(SDL_Renderer * renderer);
     void printGrid();
+    vector<vector<int>> gridArray;
+
 
 private:
 
@@ -36,14 +40,12 @@ private:
     vec2 size;
     vec2 gridSize;
     float scale;
-    vector<vector<int>> gridArray;
 
-    std::map<Colour, vec4> colourMap = {
-        { white, {255, 255, 255, 255} },
-        { black, {  0,   0,   0, 255} },
-        { red  , {255,   0,   0, 255} },
-        { green, {  0, 255,   0, 255} },
-        { blue , {  0,   0, 255, 255} }
+    std::map<State, vec4> colourMap = {
+        { passage   , {255, 255, 255, 255} },
+        { blocked   , {  0,   0,   0, 255} },
+        { frontier  , {255,   0,   0, 255} },
+        { activeCell, {255, 255,   0, 255} }
     } ;
 
 };

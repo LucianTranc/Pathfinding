@@ -11,13 +11,13 @@ Grid::Grid(int x, int y, int w, int h, int grid_x, int grid_y) : gridArray(grid_
 
 }
 
-void Grid::zeroGrid()
+void Grid::setGridToState(State state)
 {
     for (int i = 0; i < gridArray.size(); i++)
     {
         for (int j = 0; j < gridArray[i].size(); j++)
         {
-            gridArray[i][j] = 0;
+            gridArray[i][j] = state;
         }
     }
 }
@@ -54,9 +54,35 @@ void Grid::printGrid()
 
 }
 
-void Grid::setRandomPositionToColour(Colour colour)
+std::pair<int, int> Grid::setRandomPositionToState(State state)
 {
-    gridArray[rand() % (int)(gridSize.x)][rand() % (int)(gridSize.y)] = colour;
+    int x = rand() % (int)(gridSize.x);
+    int y = rand() % (int)(gridSize.y);
+    gridArray[x][y] = state;
+    return {x, y};
+}
+
+
+bool Grid::setPositionToState(int x, int y, State state)
+{
+    if ((x >= 0 && x < gridSize.x) && (y >= 0 && y < gridSize.y))
+    {
+        gridArray[x][y] = state;
+        return true;
+    }
+    return false;
+}
+
+bool Grid::isStateAtPosition(int x, int y, State state)
+{
+    if ((x >= 0 && x < gridSize.x) && (y >= 0 && y < gridSize.y))
+    {
+        if (gridArray[x][y] == state)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -77,7 +103,7 @@ void Grid::draw(SDL_Renderer * renderer)
 
             //std::cout<<"x: "<<r.x<<", y: "<<r.y<<", w: "<<r.w<<", h: "<<r.h<<std::endl;
             
-            vec4 colour = colourMap[(Colour)gridArray[i][j]];
+            vec4 colour = colourMap[(State)gridArray[i][j]];
 
             SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.a);
             

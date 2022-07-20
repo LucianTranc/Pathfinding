@@ -42,7 +42,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	loadAssets();
-	
+	start();
 }
 
 void Game::loadAssets()
@@ -50,10 +50,13 @@ void Game::loadAssets()
 	mazeManager = new MazeManager();
 }
 
+void Game::start()
+{
+	mazeManager->start();
+}
 
 void Game::handleEvents()
 {
-
 	SDL_PollEvent(&event);
 	switch (event.type) {
 	case SDL_QUIT:
@@ -62,14 +65,11 @@ void Game::handleEvents()
 	default:
 		break;
 	}
-	
 }
 
 void Game::update()
 {
-
 	mazeManager->update();
-
 }
 
 

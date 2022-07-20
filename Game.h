@@ -26,6 +26,7 @@ public:
 	
 	void loadAssets();
 	void handleEvents();
+	void start();
 	void update();
 	bool running() { return isRunning; }
 	void render();
