@@ -8,7 +8,8 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Grid.h"
-
+#include "MazeGenerator.h"
+#include "Pathfinder.h"
 
 using std::string;
 using std::vector;
@@ -19,20 +20,23 @@ using glm::vec2;
 using glm::vec4;
 
 class Grid;
+class MazeGenerator;
+class Pathfinder;
 
-class MazeManager {
+class GridManager {
 
 public:
 
-    MazeManager();
-    void draw(SDL_Renderer * renderer);
-    void update();
+    GridManager();
     void start();
-    void computeFrontierCells(pair<int, int> cell);
-    bool popRandomFrontierCell(pair<int, int> * outCell);
-    void makePassage(pair<int, int> frontierCell);
+    void update();
+    void draw(SDL_Renderer * renderer);
+    void generateMaze();
+    void setStartAndEndCells();
+    void solveMaze();
 
 private:
     Grid * grid;
-    vector<pair<int, int>> frontierCells;
+    MazeGenerator * mazeGenerator;
+    Pathfinder * pathfinder;
 };

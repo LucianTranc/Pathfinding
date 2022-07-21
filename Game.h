@@ -10,9 +10,9 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "MazeManager.h"
+#include "GridManager.h"
 
-class MazeManager;
+class GridManager;
 
 class Game
 
@@ -24,7 +24,7 @@ public:
 
 	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 	
-	void loadAssets();
+	void createGameObjects();
 	void handleEvents();
 	void start();
 	void update();
@@ -32,7 +32,7 @@ public:
 	void render();
 	void clean();
 
-	MazeManager * mazeManager;
+	GridManager * gridManager;
 
 	static SDL_Renderer *renderer;
 	static SDL_Event event;

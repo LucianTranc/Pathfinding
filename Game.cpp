@@ -41,18 +41,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		std::cout << "Error : SDL_TTF" << std::endl;
 	}
 
-	loadAssets();
-	start();
 }
 
-void Game::loadAssets()
+void Game::createGameObjects()
 {
-	mazeManager = new MazeManager();
+	gridManager = new GridManager();
 }
 
 void Game::start()
 {
-	mazeManager->start();
+	gridManager->start();
 }
 
 void Game::handleEvents()
@@ -69,7 +67,7 @@ void Game::handleEvents()
 
 void Game::update()
 {
-	mazeManager->update();
+	gridManager->update();
 }
 
 
@@ -79,7 +77,7 @@ void Game::render()
 
 	SDL_RenderClear(renderer);
 
-	mazeManager->draw(renderer);
+	gridManager->draw(renderer);
 
 	SDL_RenderPresent(renderer);
 }

@@ -20,7 +20,7 @@ class Grid {
 
 public:
 
-    enum State {passage, blocked, frontier, activeCell} ;
+    enum State {passage, blocked, frontier, start, end, inQueue, searched, path} ;
 
     Grid(int x, int y, int w, int h, int grid_x, int grid_y);
     void setGridArray(vector<vector<int>> array);
@@ -44,8 +44,12 @@ private:
     std::map<State, vec4> colourMap = {
         { passage   , {255, 255, 255, 255} },
         { blocked   , {  0,   0,   0, 255} },
-        { frontier  , {255,   0,   0, 255} },
-        { activeCell, {255, 255,   0, 255} }
+        { frontier  , {255, 255,   0, 255} },
+        { start     , {  0, 255,   0, 255} },
+        { end       , {255,   0,   0, 255} },
+        { inQueue   , {255,   0, 255, 255} },
+        { searched  , {110, 200, 255, 255} },
+        { path      , {204, 137, 137, 255} }
     } ;
 
 };

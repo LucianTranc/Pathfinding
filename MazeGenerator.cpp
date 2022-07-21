@@ -1,41 +1,65 @@
-#include "MazeManager.h"
+#include "MazeGenerator.h"
 
-MazeManager::MazeManager()
+MazeGenerator::MazeGenerator(Grid * g)
 {
-    grid = new Grid(0, 0, 800, 600, 80, 60);;
+    grid = g;
 }
 
-void MazeManager::start()
+void MazeGenerator::generateMaze(int x, int y, bool animate)
 {
-    int start_x = 0;
-    int start_y = 0;
-
-    grid->setGridToState(Grid::blocked);
-    if (grid->setPositionToState(start_x, start_y, Grid::passage))
-        computeFrontierCells({start_x, start_y});
     
-}
+    grid->setGridToState(Grid::blocked);
 
-void MazeManager::draw(SDL_Renderer * renderer)
-{
-    grid->draw(renderer);
-}
-
-void MazeManager::update()
-{
-    if (frontierCells.size() > 0)
+    if (grid->setPositionToState(x, y, Grid::passage))
     {
-        std::pair<int,int> poppedFrontierCell;
+        computeFrontierCells({x, y});
+    }
 
-        if (popRandomFrontierCell(&poppedFrontierCell))
+    if (animate)
+    {
+        generationComplete = false;
+    }
+    else
+    {
+        while (frontierCells.size() > 0)
         {
-            computeFrontierCells(poppedFrontierCell);
-            makePassage(poppedFrontierCell);
+            std::pair<int,int> poppedFrontierCell;
+
+            if (popRandomFrontierCell(&poppedFrontierCell))
+            {
+                computeFrontierCells(poppedFrontierCell);
+                makePassage(poppedFrontierCell);
+            }
+        }
+        generationComplete = true;
+    }
+}
+
+void MazeGenerator::update()
+{
+    if (!generationComplete)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            if (frontierCells.size() > 0)
+            {
+                std::pair<int,int> poppedFrontierCell;
+
+                if (popRandomFrontierCell(&poppedFrontierCell))
+                {
+                    computeFrontierCells(poppedFrontierCell);
+                    makePassage(poppedFrontierCell);
+                }
+            }
+            else
+            {
+                generationComplete = true;
+            }
         }
     }
 }
 
-void MazeManager::makePassage(std::pair<int, int> frontierCell)
+void MazeGenerator::makePassage(std::pair<int, int> frontierCell)
 {
     vector<std::pair<int,int>> neighbourPassages;
 
@@ -90,7 +114,7 @@ void MazeManager::makePassage(std::pair<int, int> frontierCell)
 
 }
 
-bool MazeManager::popRandomFrontierCell(std::pair<int, int> * outCell)
+bool MazeGenerator::popRandomFrontierCell(std::pair<int, int> * outCell)
 {
     if (frontierCells.size() > 0)
     {
@@ -106,7 +130,7 @@ bool MazeManager::popRandomFrontierCell(std::pair<int, int> * outCell)
     
 }
 
-void MazeManager::computeFrontierCells(std::pair<int, int> cell)
+void MazeGenerator::computeFrontierCells(std::pair<int, int> cell)
 {
 
     if (grid->isStateAtPosition(cell.first - 2, cell.second, Grid::blocked) && grid->setPositionToState(cell.first - 2, cell.second, Grid::frontier))
@@ -129,6 +153,6 @@ void MazeManager::computeFrontierCells(std::pair<int, int> cell)
         frontierCells.emplace_back(cell.first, cell.second + 2);
     }
 
-    std::cout<<"frontier cells: "<<frontierCells.size()<<std::endl;
+    //std::cout<<"frontier cells: "<<frontierCells.size()<<std::endl;
 
 }
