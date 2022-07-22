@@ -14,31 +14,24 @@ void GridManager::start()
 
 void GridManager::update()
 {
-    if (mazeGenerator != nullptr)
+    if (mazeGenerator->active)
     {
         mazeGenerator->update();
 
         if (mazeGenerator->generationComplete)
         {
-            free(mazeGenerator);
-            mazeGenerator = nullptr;
-            std::cout<<"Maze Generator Freed"<<std::endl;
             setStartAndEndCells();
-            std::cout<<"Set start and end cells"<<std::endl;
             pathfinder->findPath(0, 0, true);
-            std::cout<<"envoked find path"<<std::endl;
-
         }
     }
-    else if (pathfinder != nullptr)
+    
+    if (pathfinder->active)
     {
         pathfinder->update();
+
         if (pathfinder->pathFound)
         {
-            std::cout<<"path found"<<std::endl;
-
-            free(pathfinder);
-            pathfinder = nullptr;
+            // return a list containing the path
         }
     }
     
@@ -64,11 +57,6 @@ void GridManager::setStartAndEndCells()
 void GridManager::draw(SDL_Renderer * renderer)
 {
     grid->draw(renderer);
-}
-
-void GridManager::generateMaze()
-{
-
 }
 
 

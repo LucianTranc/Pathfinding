@@ -7,7 +7,9 @@ Pathfinder::Pathfinder(Grid * g)
 
 void Pathfinder::findPath(int x, int y, bool animate)
 {
-    addNeighboursToQueue({{x, y},{-x, -y}});
+    active = true;
+
+    addNeighboursToQueue({{x, y},{x, y}});
 
     if (animate)
     {
@@ -17,35 +19,47 @@ void Pathfinder::findPath(int x, int y, bool animate)
     {
         while (deque.size() > 0)
         {
-            pair<pair<int,int>,pair<int,int>> popped = deque.front();
+            Cell popped = deque.front();
             deque.pop_front();           
+
+            grid->setPositionToState(popped.position.x, popped.position.y, Grid::searched);
+
+            if (endFound(popped))
+            {
+                retracePath(popped);
+                pathFound = true;
+                active = false;
+                return;
+            }
 
             addNeighboursToQueue(popped);
 
             searched.push_back(popped);
-
         }
-        pathFound = true;
+        pathFound = false;
+        active = false;
     }
 }
 
 void Pathfinder::update()
 {
-    if (!pathFound)
+    if (active && !pathFound)
     {
         for (int i = 0; i < 5; i++)
         {
             if (deque.size() > 0)
             {
-                pair<pair<int,int>,pair<int,int>> popped = deque.front();
+                Cell popped = deque.front();
                 deque.pop_front();
 
-                grid->setPositionToState(popped.first.first, popped.first.second, Grid::searched);
+                grid->setPositionToState(popped.position.x, popped.position.y, Grid::searched);
 
                 if (endFound(popped))
                 {
-                    pathFound = true;
                     retracePath(popped);
+                    pathFound = true;
+                    active = false;
+                    return;
                 }
 
                 addNeighboursToQueue(popped);
@@ -54,85 +68,60 @@ void Pathfinder::update()
             }
             else
             {
-                pathFound = true;
+                pathFound = false;
+                active = false;
             }
         }
     }
 }
 
-void Pathfinder::retracePath(pair<pair<int,int>,pair<int,int>> cell)
+void Pathfinder::retracePath(Cell cell)
 {
-    grid->setPositionToState(cell.first.first, cell.first.second, Grid::path);
+    grid->setPositionToState(cell.position.x, cell.position.y, Grid::path);
 
-    pair<int,int> nextCell = cell.second;
-    pair<pair<int,int>,pair<int,int>> next = cell;
+    vec2 parentCellPosition = cell.parentCellPosition;
+    Cell currentCell = cell;
 
-    while (!(nextCell.first == 0 && nextCell.second == 0))
+    while (!(parentCellPosition.x == 0 && parentCellPosition.y == 0))
     {
         for (int i = 0; i < searched.size(); i++)
         {
-            if (searched[i].first == nextCell)
+            if (searched[i].position == parentCellPosition)
             {
-                next = searched[i];
-                grid->setPositionToState(next.first.first, next.first.second, Grid::path);
-
+                grid->setPositionToState(parentCellPosition.x, parentCellPosition.y, Grid::path);
+                currentCell = searched[i];
                 break;
             }
         }
-
-        nextCell = next.second;
-        std::cout<<"nextCell: {"<<nextCell.first<<", "<<nextCell.second<<"}"<<std::endl;
-
+        parentCellPosition = currentCell.parentCellPosition;
     }
-    
-
 }
 
-bool Pathfinder::endFound(pair<pair<int,int>,pair<int,int>> cell)
+bool Pathfinder::endFound(Cell cell)
 {
-    if (grid->isStateAtPosition(cell.first.first - 1, cell.first.second, Grid::end))
+    vector<vec2> directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+
+    for (int i = 0; i < directions.size(); i++)
     {
-        return true;
-    }
-    if (grid->isStateAtPosition(cell.first.first, cell.first.second - 1, Grid::end))
-    {
-        return true;
-    }
-    if (grid->isStateAtPosition(cell.first.first + 1, cell.first.second, Grid::end))
-    {
-        return true;
-    }
-    if (grid->isStateAtPosition(cell.first.first, cell.first.second + 1, Grid::end))
-    {
-        return true;
+        if (grid->isStateAtPosition(cell.position.x + directions[i].x, cell.position.y + directions[i].y, Grid::end))
+        {
+            return true;
+        }
     }
     return false;
 }
 
 
-void Pathfinder::addNeighboursToQueue(pair<pair<int,int>,pair<int,int>> cell)
+void Pathfinder::addNeighboursToQueue(Cell cell)
 {
+    vector<vec2> directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
-    if (grid->isStateAtPosition(cell.first.first - 1, cell.first.second, Grid::passage) && grid->setPositionToState(cell.first.first - 1, cell.first.second, Grid::inQueue))
+    for (int i = 0; i < directions.size(); i++)
     {
-        deque.push_back({{cell.first.first - 1, cell.first.second}, cell.first});
+        if (grid->isStateAtPosition(cell.position.x + directions[i].x, cell.position.y + directions[i].y, Grid::passage) &&
+            grid->setPositionToState(cell.position.x + directions[i].x, cell.position.y + directions[i].y, Grid::inQueue))
+        {
+            deque.push_back({{cell.position.x + directions[i].x, cell.position.y + directions[i].y}, cell.position});
+        }
     }
-
-    if (grid->isStateAtPosition(cell.first.first, cell.first.second - 1, Grid::passage) && grid->setPositionToState(cell.first.first, cell.first.second - 1, Grid::inQueue))
-    {
-        deque.push_back({{cell.first.first, cell.first.second - 1}, cell.first});
-    }
-
-    if (grid->isStateAtPosition(cell.first.first + 1, cell.first.second, Grid::passage) && grid->setPositionToState(cell.first.first + 1, cell.first.second, Grid::inQueue))
-    {
-        deque.push_back({{cell.first.first + 1, cell.first.second}, cell.first});
-    }
-
-    if (grid->isStateAtPosition(cell.first.first, cell.first.second + 1, Grid::passage) && grid->setPositionToState(cell.first.first, cell.first.second + 1, Grid::inQueue))
-    {
-        deque.push_back({{cell.first.first, cell.first.second + 1}, cell.first});
-    }
-
-    //std::cout<<"frontier cells: "<<frontierCells.size()<<std::endl;
-
 }

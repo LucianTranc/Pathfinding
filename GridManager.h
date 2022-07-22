@@ -31,9 +31,7 @@ public:
     void start();
     void update();
     void draw(SDL_Renderer * renderer);
-    void generateMaze();
     void setStartAndEndCells();
-    void solveMaze();
 
 private:
     Grid * grid;

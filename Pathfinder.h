@@ -26,17 +26,23 @@ class Pathfinder {
 
 public:
 
+    struct Cell {
+        vec2 position;
+        vec2 parentCellPosition;
+    } typedef Cell;
+
     Pathfinder(Grid * g);
     void update();
     void findPath(int x, int y, bool animate);
-    void addNeighboursToQueue(pair<pair<int,int>,pair<int,int>> cell);
-    bool endFound(pair<pair<int,int>,pair<int,int>> cell);
-    void retracePath(pair<pair<int,int>,pair<int,int>> cell);
+    void addNeighboursToQueue(Cell cell);
+    bool endFound(Cell cell);
+    void retracePath(Cell cell);
 
     bool pathFound;
+    bool active;
 
 private:
     Grid * grid;
-    vector<pair<pair<int,int>, pair<int,int>>> searched;
-    deque<pair<pair<int,int>, pair<int,int>>> deque;
+    vector<Cell> searched;
+    deque<Cell> deque;
 };

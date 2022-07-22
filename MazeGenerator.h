@@ -26,13 +26,14 @@ public:
 
     MazeGenerator(Grid * g);
     void update();
-    void computeFrontierCells(pair<int, int> cell);
-    bool popRandomFrontierCell(pair<int, int> * outCell);
-    void makePassage(pair<int, int> frontierCell);
+    void computeFrontierCells(vec2 cell);
+    bool popRandomFrontierCell(vec2 * outCell);
+    void makePassage(vec2 frontierCell);
     void generateMaze(int x, int y, bool animate);
     bool generationComplete;
+    bool active;
 
 private:
     Grid * grid;
-    vector<pair<int, int>> frontierCells;
+    vector<vec2> frontierCells;
 };

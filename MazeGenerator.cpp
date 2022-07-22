@@ -7,14 +7,17 @@ MazeGenerator::MazeGenerator(Grid * g)
 
 void MazeGenerator::generateMaze(int x, int y, bool animate)
 {
-    
+    active = true;
+
     grid->setGridToState(Grid::blocked);
 
+    // set the starting point to a passage and compute its frontier cells
     if (grid->setPositionToState(x, y, Grid::passage))
     {
         computeFrontierCells({x, y});
     }
 
+    // continue with maze generation, either animated or not
     if (animate)
     {
         generationComplete = false;
@@ -23,7 +26,7 @@ void MazeGenerator::generateMaze(int x, int y, bool animate)
     {
         while (frontierCells.size() > 0)
         {
-            std::pair<int,int> poppedFrontierCell;
+            vec2 poppedFrontierCell;
 
             if (popRandomFrontierCell(&poppedFrontierCell))
             {
@@ -32,18 +35,19 @@ void MazeGenerator::generateMaze(int x, int y, bool animate)
             }
         }
         generationComplete = true;
+        active = false;
     }
 }
 
 void MazeGenerator::update()
 {
-    if (!generationComplete)
+    if (active && !generationComplete)
     {
         for (int i = 0; i < 5; i++)
         {
             if (frontierCells.size() > 0)
             {
-                std::pair<int,int> poppedFrontierCell;
+                vec2 poppedFrontierCell;
 
                 if (popRandomFrontierCell(&poppedFrontierCell))
                 {
@@ -54,67 +58,39 @@ void MazeGenerator::update()
             else
             {
                 generationComplete = true;
+                active = false;
             }
         }
     }
 }
 
-void MazeGenerator::makePassage(std::pair<int, int> frontierCell)
+void MazeGenerator::makePassage(vec2 frontierCell)
 {
-    vector<std::pair<int,int>> neighbourPassages;
+    vector<vec2> availableDirections;
 
-    if (grid->isStateAtPosition(frontierCell.first - 2, frontierCell.second, Grid::passage))
+    vector<vec2> directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+
+    for (int i = 0; i < directions.size(); i++)
     {
-        neighbourPassages.emplace_back(-2, 0);
-    }
-
-    if (grid->isStateAtPosition(frontierCell.first + 2, frontierCell.second, Grid::passage))
-    {
-        neighbourPassages.emplace_back(2, 0);
-    }
-
-    if (grid->isStateAtPosition(frontierCell.first, frontierCell.second - 2, Grid::passage))
-    {
-        neighbourPassages.emplace_back(0, -2);
-    }
-
-    if (grid->isStateAtPosition(frontierCell.first, frontierCell.second + 2, Grid::passage))
-    {
-        neighbourPassages.emplace_back(0, 2);
-    }
-
-    if (neighbourPassages.size() > 0)
-    {
-        std::pair<int,int> neighbourChosen = neighbourPassages[rand() % neighbourPassages.size()];
-
-        if (neighbourChosen.first == -2)
+        if (grid->isStateAtPosition(frontierCell.x + (directions[i].x * 2), frontierCell.y + (directions[i].y * 2), Grid::passage))
         {
-            grid->setPositionToState(frontierCell.first - 1, frontierCell.second, Grid::passage);
-            grid->setPositionToState(frontierCell.first - 2, frontierCell.second, Grid::passage);
-        }
-        else if (neighbourChosen.first == 2)
-        {
-            grid->setPositionToState(frontierCell.first + 1, frontierCell.second, Grid::passage);
-            grid->setPositionToState(frontierCell.first + 2, frontierCell.second, Grid::passage);
-        }
-        else if (neighbourChosen.second == -2)
-        {
-            grid->setPositionToState(frontierCell.first, frontierCell.second - 1, Grid::passage);
-            grid->setPositionToState(frontierCell.first, frontierCell.second - 2, Grid::passage);
-        }
-        else if (neighbourChosen.second == 2)
-        {
-            grid->setPositionToState(frontierCell.first, frontierCell.second + 1, Grid::passage);
-            grid->setPositionToState(frontierCell.first, frontierCell.second + 2, Grid::passage);
+            availableDirections.emplace_back(directions[i]);
         }
     }
 
-    grid->setPositionToState(frontierCell.first, frontierCell.second, Grid::passage);
+    if (availableDirections.size() > 0)
+    {
+        vec2 directionChosen = availableDirections[rand() % availableDirections.size()];
 
+        grid->setPositionToState(frontierCell.x + directionChosen.x, frontierCell.y + directionChosen.y, Grid::passage);
+        grid->setPositionToState(frontierCell.x + (directionChosen.x * 2), frontierCell.y + (directionChosen.y * 2), Grid::passage);
+    }
+
+    grid->setPositionToState(frontierCell.x, frontierCell.y, Grid::passage);
 
 }
 
-bool MazeGenerator::popRandomFrontierCell(std::pair<int, int> * outCell)
+bool MazeGenerator::popRandomFrontierCell(vec2 * outCell)
 {
     if (frontierCells.size() > 0)
     {
@@ -130,29 +106,16 @@ bool MazeGenerator::popRandomFrontierCell(std::pair<int, int> * outCell)
     
 }
 
-void MazeGenerator::computeFrontierCells(std::pair<int, int> cell)
+void MazeGenerator::computeFrontierCells(vec2 cell)
 {
+    vector<vec2> directions = {{-2, 0}, {0, -2}, {2, 0}, {0, 2}};
 
-    if (grid->isStateAtPosition(cell.first - 2, cell.second, Grid::blocked) && grid->setPositionToState(cell.first - 2, cell.second, Grid::frontier))
+    for (int i = 0; i < directions.size(); i++)
     {
-        frontierCells.emplace_back(cell.first - 2, cell.second);
+        if (grid->isStateAtPosition(cell.x + directions[i].x, cell.y + directions[i].y, Grid::blocked) &&
+            grid->setPositionToState(cell.x + directions[i].x, cell.y + directions[i].y, Grid::frontier))
+        {
+            frontierCells.emplace_back(cell.x + directions[i].x, cell.y + directions[i].y);
+        }
     }
-
-    if (grid->isStateAtPosition(cell.first, cell.second - 2, Grid::blocked) && grid->setPositionToState(cell.first, cell.second - 2, Grid::frontier))
-    {
-        frontierCells.emplace_back(cell.first, cell.second - 2);
-    }
-
-    if (grid->isStateAtPosition(cell.first + 2, cell.second, Grid::blocked) && grid->setPositionToState(cell.first + 2, cell.second, Grid::frontier))
-    {
-        frontierCells.emplace_back(cell.first + 2, cell.second);
-    }
-
-    if (grid->isStateAtPosition(cell.first, cell.second + 2, Grid::blocked) && grid->setPositionToState(cell.first, cell.second + 2, Grid::frontier))
-    {
-        frontierCells.emplace_back(cell.first, cell.second + 2);
-    }
-
-    //std::cout<<"frontier cells: "<<frontierCells.size()<<std::endl;
-
 }
