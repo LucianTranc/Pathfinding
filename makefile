@@ -4,9 +4,9 @@ INC_PATH = -I /Library/Frameworks/SDL2.framework/Headers -I /Library/Frameworks/
 LDFLAGS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_ttf-2.0.0
 
 pathfinding: main.o
-	$(CC) $(CFLAGS) $(INC_PATH) $(LDFLAGS) -framework OpengL bin/main.o bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/Pathfinder.o -o play
+	$(CC) $(CFLAGS) $(INC_PATH) $(LDFLAGS) -framework OpengL bin/main.o bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/PathfindingManager.o bin/PathfindingAlgorithm.o bin/DepthFirstSearch.o bin/BreadthFirstSearch.o bin/AStar.o -o play
 
-main.o: main.cpp bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/Pathfinder.o
+main.o: main.cpp bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/PathfindingManager.o bin/PathfindingAlgorithm.o bin/DepthFirstSearch.o bin/BreadthFirstSearch.o bin/AStar.o
 	$(CC) $(CFLAGS) $(INC_PATH) main.cpp -c -o bin/main.o
 
 bin/Game.o: Game.cpp Game.h
@@ -21,8 +21,20 @@ bin/MazeGenerator.o: MazeGenerator.cpp MazeGenerator.h
 bin/GridManager.o: GridManager.cpp GridManager.h
 	$(CC) $(CFLAGS) $(INC_PATH) GridManager.cpp -c -o bin/GridManager.o
 
-bin/Pathfinder.o: Pathfinder.cpp Pathfinder.h
-	$(CC) $(CFLAGS) $(INC_PATH) Pathfinder.cpp -c -o bin/Pathfinder.o
+bin/PathfindingManager.o: Pathfinding/PathfindingManager.cpp Pathfinding/PathfindingManager.h
+	$(CC) $(CFLAGS) $(INC_PATH) Pathfinding/PathfindingManager.cpp -c -o bin/PathfindingManager.o
+
+bin/PathfindingAlgorithm.o: Pathfinding/PathfindingAlgorithm.cpp Pathfinding/PathfindingAlgorithm.h
+	$(CC) $(CFLAGS) $(INC_PATH) Pathfinding/PathfindingAlgorithm.cpp -c -o bin/PathfindingAlgorithm.o
+
+bin/DepthFirstSearch.o: Pathfinding/DepthFirstSearch.cpp Pathfinding/DepthFirstSearch.h
+	$(CC) $(CFLAGS) $(INC_PATH) Pathfinding/DepthFirstSearch.cpp -c -o bin/DepthFirstSearch.o
+
+bin/BreadthFirstSearch.o: Pathfinding/BreadthFirstSearch.cpp Pathfinding/BreadthFirstSearch.h
+	$(CC) $(CFLAGS) $(INC_PATH) Pathfinding/BreadthFirstSearch.cpp -c -o bin/BreadthFirstSearch.o
+
+bin/AStar.o: Pathfinding/AStar.cpp Pathfinding/AStar.h
+	$(CC) $(CFLAGS) $(INC_PATH) Pathfinding/AStar.cpp -c -o bin/AStar.o
 
 clean :
 	-rm *.o bin/*.o play

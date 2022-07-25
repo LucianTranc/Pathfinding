@@ -4,54 +4,83 @@ GridManager::GridManager()
 {
     grid = new Grid(0, 0, 800, 600, 80, 60);
     mazeGenerator = new MazeGenerator(grid);
-    pathfinder = new Pathfinder(grid);
+    pathfindingManager = new PathfindingManager(grid);
 }
 
 void GridManager::start()
 {
-    mazeGenerator->generateMaze(0, 0, true);
+    mazeGenerator->generateMaze(0, 59, true);
 }
 
 void GridManager::update()
 {
     if (mazeGenerator->active)
     {
+        std::cout<<"maze active"<<std::endl;
+
         mazeGenerator->update();
 
         if (mazeGenerator->generationComplete)
         {
-            setStartAndEndCells();
-            pathfinder->findPath(0, 0, true);
+            pair<vec2, vec2> startAndEnd = setStartAndEndCells();
+            pathfindingManager->findPath(startAndEnd.first.x, startAndEnd.first.y, PathfindingManager::DFS, true);
         }
     }
-    
-    if (pathfinder->active)
+    else
     {
-        pathfinder->update();
+        std::cout<<"maze inactive"<<std::endl;
 
-        if (pathfinder->pathFound)
+    }
+    
+    if (pathfindingManager->active)
+    {
+        std::cout<<"path active"<<std::endl;
+
+        pathfindingManager->update();
+
+        if (pathfindingManager->pathFound)
         {
             // return a list containing the path
         }
     }
+    else
+    {
+        std::cout<<"path inactive"<<std::endl;
+    }
     
 }
 
-void GridManager::setStartAndEndCells()
+std::pair<vec2, vec2> GridManager::setStartAndEndCells()
 {
-    grid->setPositionToState(0, 0, Grid::start);
+    std::pair<vec2, vec2> startAndEndCells;
+    bool foundSuitableStart = false;
+    while (!foundSuitableStart)
+    {
+        int x = rand() % 20;
+        int y = rand() % 15;
+        if (grid->isStateAtPosition(x, y, Grid::passage))
+        {
+            grid->setPositionToState(x, y, Grid::start);
+            startAndEndCells.first = {x,y};
+            foundSuitableStart = true;
+        }
+    }
+
     bool foundSuitableEnd = false;
     while (!foundSuitableEnd)
     {
-        int x = rand() % 40 + 40;
-        int y = rand() % 30 + 30;
+        int x = rand() % 20 + 59;
+        int y = rand() % 15 + 44;
+        //int x = rand() % 20;
+        //int y = rand() % 15;
         if (grid->isStateAtPosition(x, y, Grid::passage))
         {
             grid->setPositionToState(x, y, Grid::end);
+            startAndEndCells.second = {x,y};
             foundSuitableEnd = true;
-            return;
         }
     }
+    return startAndEndCells;
 }
 
 void GridManager::draw(SDL_Renderer * renderer)

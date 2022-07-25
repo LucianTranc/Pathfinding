@@ -4,11 +4,15 @@
 #include <vector>
 #include <map>
 #include <deque>
-#include "glm/glm.hpp"
+#include "../glm/glm.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include "Grid.h"
+#include "../Grid.h"
+#include "PathfindingAlgorithm.h"
+#include "DepthFirstSearch.h"
+#include "BreadthFirstSearch.h"
+#include "AStar.h"
 
 
 using std::string;
@@ -22,27 +26,22 @@ using glm::vec4;
 
 class Grid;
 
-class Pathfinder {
+class PathfindingManager {
 
 public:
 
-    struct Cell {
-        vec2 position;
-        vec2 parentCellPosition;
-    } typedef Cell;
+    enum Algorithm {BFS, DFS, Dijkstra, aStar} ;
 
-    Pathfinder(Grid * g);
+    PathfindingManager(Grid * g);
     void update();
-    void findPath(int x, int y, bool animate);
-    void addNeighboursToQueue(Cell cell);
-    bool endFound(Cell cell);
-    void retracePath(Cell cell);
+    void findPath(int x, int y, Algorithm algorithmName, bool animate);
 
     bool pathFound;
     bool active;
 
+    PathfindingAlgorithm * activeAlgorithm;
+    Algorithm algorithm;
+
 private:
     Grid * grid;
-    vector<Cell> searched;
-    deque<Cell> deque;
 };

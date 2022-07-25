@@ -34,8 +34,6 @@ void MazeGenerator::generateMaze(int x, int y, bool animate)
                 makePassage(poppedFrontierCell);
             }
         }
-        generationComplete = true;
-        active = false;
     }
 }
 

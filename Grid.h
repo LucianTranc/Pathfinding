@@ -20,7 +20,7 @@ class Grid {
 
 public:
 
-    enum State {passage, blocked, frontier, start, end, inQueue, searched, path} ;
+    enum State {passage, blocked, frontier, start, end, inQueue, searched, path, open, closed} ;
 
     Grid(int x, int y, int w, int h, int grid_x, int grid_y);
     void setGridArray(vector<vector<int>> array);
@@ -31,6 +31,7 @@ public:
     bool isStateAtPosition(int x, int y, State state);
 	void draw(SDL_Renderer * renderer);
     void printGrid();
+    bool getCellWithState(vec2 * outCell, State state);
     vector<vector<int>> gridArray;
 
 
@@ -49,7 +50,9 @@ private:
         { end       , {255,   0,   0, 255} },
         { inQueue   , {255,   0, 255, 255} },
         { searched  , {110, 200, 255, 255} },
-        { path      , {204, 137, 137, 255} }
+        { path      , {204, 137, 137, 255} },
+        { open      , {132, 209, 128, 255} },
+        { closed    , {209, 174, 128, 255} }
     } ;
 
 };

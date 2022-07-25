@@ -111,6 +111,20 @@ void Grid::draw(SDL_Renderer * renderer)
 
         }
     }
+}
 
-
+bool Grid::getCellWithState(vec2 * outCell, Grid::State state)
+{
+    for (int i = 0; i < gridSize.x; i++)
+    {
+        for (int j = 0; j < gridSize.y; j++)
+        {
+            if (gridArray[i][j] == state)
+            {
+                *outCell = {i, j};
+                return true;
+            }
+        }
+    }
+    return false;
 }

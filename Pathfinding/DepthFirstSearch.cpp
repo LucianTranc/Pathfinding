@@ -1,13 +1,20 @@
-#include "Pathfinder.h"
+#include "DepthFirstSearch.h"
 
-Pathfinder::Pathfinder(Grid * g)
+
+DepthFirstSearch::DepthFirstSearch(Grid * g)
 {
     grid = g;
 }
 
-void Pathfinder::findPath(int x, int y, bool animate)
+void DepthFirstSearch::initializeAlgorithm(int x, int y, bool animate)
 {
+
     active = true;
+
+    if (!grid->getCellWithState(&startCell, Grid::start))
+    {
+        std::cout<<"No start cell found"<<std::endl;
+    }
 
     addNeighboursToQueue({{x, y},{x, y}});
 
@@ -19,8 +26,8 @@ void Pathfinder::findPath(int x, int y, bool animate)
     {
         while (deque.size() > 0)
         {
-            Cell popped = deque.front();
-            deque.pop_front();           
+            Cell popped = deque.back();
+            deque.pop_back();           
 
             grid->setPositionToState(popped.position.x, popped.position.y, Grid::searched);
 
@@ -38,10 +45,10 @@ void Pathfinder::findPath(int x, int y, bool animate)
         }
         pathFound = false;
         active = false;
-    }
+    }   
 }
 
-void Pathfinder::update()
+void DepthFirstSearch::update()
 {
     if (active && !pathFound)
     {
@@ -49,8 +56,8 @@ void Pathfinder::update()
         {
             if (deque.size() > 0)
             {
-                Cell popped = deque.front();
-                deque.pop_front();
+                Cell popped = deque.back();
+                deque.pop_back();
 
                 grid->setPositionToState(popped.position.x, popped.position.y, Grid::searched);
 
@@ -72,17 +79,18 @@ void Pathfinder::update()
                 active = false;
             }
         }
+   
     }
 }
 
-void Pathfinder::retracePath(Cell cell)
+void DepthFirstSearch::retracePath(Cell cell)
 {
     grid->setPositionToState(cell.position.x, cell.position.y, Grid::path);
 
     vec2 parentCellPosition = cell.parentCellPosition;
     Cell currentCell = cell;
 
-    while (!(parentCellPosition.x == 0 && parentCellPosition.y == 0))
+    while (parentCellPosition != startCell)
     {
         for (int i = 0; i < searched.size(); i++)
         {
@@ -97,7 +105,7 @@ void Pathfinder::retracePath(Cell cell)
     }
 }
 
-bool Pathfinder::endFound(Cell cell)
+bool DepthFirstSearch::endFound(Cell cell)
 {
     vector<vec2> directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
@@ -112,7 +120,7 @@ bool Pathfinder::endFound(Cell cell)
 }
 
 
-void Pathfinder::addNeighboursToQueue(Cell cell)
+void DepthFirstSearch::addNeighboursToQueue(Cell cell)
 {
     vector<vec2> directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
