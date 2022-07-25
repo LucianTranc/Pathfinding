@@ -9,32 +9,37 @@ GridManager::GridManager()
 
 void GridManager::start()
 {
-    mazeGenerator->generateMaze(0, 59, true);
+    //mazeGenerator->generateMaze(0, 59, true);
+    grid->setPositionToState(1, 1, Grid::start);
+    grid->setPositionToState(14, 15, Grid::end);
+    pair<vec2, vec2> startAndEnd = {{1,1},{14,15}};
+    pathfindingManager->findPath(startAndEnd.first.x, startAndEnd.first.y, PathfindingManager::aStar, true);
+
 }
 
 void GridManager::update()
 {
     if (mazeGenerator->active)
     {
-        std::cout<<"maze active"<<std::endl;
+        //std::cout<<"maze active"<<std::endl;
 
         mazeGenerator->update();
 
         if (mazeGenerator->generationComplete)
         {
             pair<vec2, vec2> startAndEnd = setStartAndEndCells();
-            pathfindingManager->findPath(startAndEnd.first.x, startAndEnd.first.y, PathfindingManager::DFS, true);
+            pathfindingManager->findPath(startAndEnd.first.x, startAndEnd.first.y, PathfindingManager::aStar, true);
         }
     }
     else
     {
-        std::cout<<"maze inactive"<<std::endl;
+        //std::cout<<"maze inactive"<<std::endl;
 
     }
     
     if (pathfindingManager->active)
     {
-        std::cout<<"path active"<<std::endl;
+        //std::cout<<"path active"<<std::endl;
 
         pathfindingManager->update();
 
@@ -45,7 +50,7 @@ void GridManager::update()
     }
     else
     {
-        std::cout<<"path inactive"<<std::endl;
+        //std::cout<<"path inactive"<<std::endl;
     }
     
 }

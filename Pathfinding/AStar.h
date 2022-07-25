@@ -9,6 +9,7 @@ using std::deque;
 
 #define GLM_ENABLE_EXPERIMENTAL
 using glm::vec2;
+using glm::vec3;
 using glm::vec4;
 
 class Grid;
@@ -19,8 +20,9 @@ class AStar : public PathfindingAlgorithm{
 public:
 
     struct AStarCell {
-        int distanceToStart;
-        int distanceToEnd;
+        int f_totalCost;
+        int g_lengthOfPath;
+        int h_distanceToEnd;
         vec2 position;
         vec2 parentCellPosition;
     } typedef AStarCell;
@@ -34,9 +36,15 @@ public:
 private:
 
     int distanceBetweenCells(vec2 start, vec2 end);
-    int findCellInOpenWithLowestCost();
+    AStarCell findCellInOpenWithLowestCost(int * outIndex);
+    AStarCell findCellInOpen(vec2 position);
     bool isInClosedList(vec2 cell);
     bool isInOpenList(vec2 cell, int * index = nullptr);
+    void printOpenList();
+    void printClosedList();
+    void printAStarCell(AStarCell cell);
+    AStarCell createNewCell(AStarCell * parent, vec2 direction);
+    void retracePath(AStarCell cell);
 
     vec2 startCell;
     vec2 endCell;
