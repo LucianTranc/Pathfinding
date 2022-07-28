@@ -36,6 +36,7 @@ public:
 private:
 
     int distanceBetweenCells(vec2 start, vec2 end);
+    int manhattenDistanceBetweenCells(vec2 start, vec2 end);
     AStarCell findCellInOpenWithLowestCost(int * outIndex);
     AStarCell findCellInOpen(vec2 position);
     bool isInClosedList(vec2 cell);
@@ -44,7 +45,7 @@ private:
     void printClosedList();
     void printAStarCell(AStarCell cell);
     AStarCell createNewCell(AStarCell * parent, vec2 direction);
-    void retracePath(AStarCell cell);
+    void retrace(AStarCell cell);
 
     vec2 startCell;
     vec2 endCell;

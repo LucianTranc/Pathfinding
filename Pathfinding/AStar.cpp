@@ -14,7 +14,8 @@ void AStar::initializeAlgorithm(int x, int y, bool animate)
     distanceBetweenCells({1,1}, {2,2});
 
 
-    //active = true;
+    active = true;
+    pathFound = false;
 
     if (!grid->getCellWithState(&startCell, Grid::start))
     {
@@ -40,30 +41,36 @@ void AStar::initializeAlgorithm(int x, int y, bool animate)
 
     printOpenList();
 
-    // loop <- using a for loop temprarily 
-    for (int i = 0; i < 10000000; i++)
-    {
-        std::cout<<"_______________________________________"<<std::endl;
-        std::cout<<"A* iteration: "<<i<<std::endl;
-        std::cout<<"_______________________________________"<<std::endl;
+    
+    
+}
 
+void AStar::update()
+{
+    if (active && !pathFound && open.size() > 0)
+    {
         int lowestCostIndex;
 
         AStarCell current = findCellInOpenWithLowestCost(&lowestCostIndex);
-
+        
+        printf("\n");
         std::cout<<"Cell with lowest cost: "<<std::endl;
         printAStarCell(current);
+        printf("\n");
 
+        closed.insert(closed.end(), open.at(lowestCostIndex));
+        
+        //open.erase(open.begin() + lowestCostIndex, open.end());
         open.erase(open.begin() + lowestCostIndex);
-
-        closed.push_back(current);
 
         grid->setPositionToState(current.position.x, current.position.y, Grid::closed);
 
         if (current.position == endCell)
         {
             std::cout<<"End Found Using A*"<<std::endl;
-            //retracePath(current);
+            retrace(current);
+            pathFound = true;
+            active = false;
             return;
         }
 
@@ -76,12 +83,31 @@ void AStar::initializeAlgorithm(int x, int y, bool animate)
         {
             vec2 neighbourPosition = {current.position.x + directions[i].x, current.position.y + directions[i].y};
 
-            std::cout<<"checking neighbour: {"<<neighbourPosition.x<<", "<<neighbourPosition.y<<"}"<<std::endl;
+            //std::cout<<"checking neighbour: {"<<neighbourPosition.x<<", "<<neighbourPosition.y<<"}"<<std::endl;
 
             if (grid->isStateAtPosition(neighbourPosition.x, neighbourPosition.y, Grid::blocked) ||
-                isInClosedList(neighbourPosition))
+                isInClosedList(neighbourPosition) ||
+                (neighbourPosition.x < 0 || neighbourPosition.y < 0) ||
+                (neighbourPosition.x > 79 || neighbourPosition.y > 59))
             {
-                std::cout<<"neighbour is blocked or is already closed"<<std::endl;
+
+/*                 std::cout<<"neighbour {"<<neighbourPosition.x<<", "<<neighbourPosition.y<<"} is:"<<std::endl;
+                if (grid->isStateAtPosition(neighbourPosition.x, neighbourPosition.y, Grid::blocked))
+                {
+                    std::cout<<"blocked"<<std::endl;
+                }
+                if (isInClosedList(neighbourPosition))
+                {
+                    std::cout<<"closed"<<std::endl;
+                }
+                if (isInClosedList(neighbourPosition) && isInOpenList(neighbourPosition))
+                {
+                    std::cout<<"closed and open lol"<<std::endl;
+                }
+                if ((neighbourPosition.x < 0 || neighbourPosition.y < 0) || (neighbourPosition.x > 79 || neighbourPosition.y > 59))
+                {
+                    std::cout<<"out of bounds"<<std::endl;
+                } */
                 continue;
             }
 
@@ -89,14 +115,16 @@ void AStar::initializeAlgorithm(int x, int y, bool animate)
 
             if (!isInOpenList(neighbourPosition, &neighbourIndexInOpenList))
             {
-
-                std::cout<<"neighbour isn't in the open list yet, adding to open"<<std::endl;
+                //std::cout<<"neighbour {"<<neighbourPosition.x<<", "<<neighbourPosition.y<<"} isn't in the open list yet, adding to open"<<std::endl;
                 open.push_back(createNewCell(&current, directions[i]));
-                printOpenList();
+                grid->setPositionToState(neighbourPosition.x, neighbourPosition.y, Grid::open);
+
+                //printOpenList();
             }
             else
             {
-                std::cout<<"neighbour is already in the open list, recalculating"<<std::endl;
+                //std::cout<<"neighbourIndexInOpenList: "<<neighbourIndexInOpenList<<std::endl;
+                //std::cout<<"neighbour is already in the open list, recalculating"<<std::endl;
 
                 int stepValue = 14;
                 if (directions[i].x == 0 || directions[i].y == 0) stepValue = 10;
@@ -105,21 +133,26 @@ void AStar::initializeAlgorithm(int x, int y, bool animate)
 
                 if (newPath < open[neighbourIndexInOpenList].g_lengthOfPath)
                 {
+/*                     std::cout<<"current cell is: {"<<current.position.x<<", "<<current.position.y<<"}"<<std::endl;
+                    std::cout<<"when exploring neighbour: {"<<neighbourPosition.x<<", "<<neighbourPosition.y<<"}"<<std::endl;
+                    std::cout<<"path from neighbour to current is shorter than path from neighbour to its old parent"<<std::endl;
+                    std::cout<<newPath<<" < "<<open[neighbourIndexInOpenList].g_lengthOfPath<<std::endl; */
                     open[neighbourIndexInOpenList].g_lengthOfPath = newPath;
                     open[neighbourIndexInOpenList].parentCellPosition = current.position;
                     open[neighbourIndexInOpenList].f_totalCost = open[neighbourIndexInOpenList].g_lengthOfPath + open[neighbourIndexInOpenList].h_distanceToEnd;
                 }
-                printOpenList();
+                else
+                {
+                    //std::cout<<newPath<<" > "<<open[neighbourIndexInOpenList].g_lengthOfPath<<std::endl;
+                }
+
+                //printOpenList();
             }        
         }
-    }
-}
-
-void AStar::update()
-{
-    if (active && !pathFound)
-    {
-   
+        /* std::cout<<std::endl<<"lists after adding neighbouts: "<<std::endl<<std::endl;
+        printOpenList();
+        printClosedList();
+        printf("\n"); */
     }
 }
 
@@ -141,6 +174,7 @@ bool AStar::isInOpenList(vec2 cell, int * index)
     {
         if (open[i].position == cell)
         {
+            if (index != nullptr) *index = i;
             return true;
         }
     }
@@ -150,19 +184,28 @@ bool AStar::isInOpenList(vec2 cell, int * index)
 AStar::AStarCell AStar::findCellInOpenWithLowestCost(int * outIndex)
 {
     int lowestCost = INT_MAX;
-    int lowestDistanceToEnd = INT_MAX;
+    int lowestLength = INT_MAX;
     int lowestCostIndex = 0;
     for (int i = 0; i < open.size(); i++)
     {
-        if (open[i].f_totalCost <= lowestCost && open[i].h_distanceToEnd < lowestDistanceToEnd)
+        if (open[i].f_totalCost < lowestCost)
         {
-            lowestDistanceToEnd = open[i].h_distanceToEnd;
+            lowestLength = open[i].g_lengthOfPath;
+            lowestCost = open[i].f_totalCost;
+            lowestCostIndex = i;
+        }
+        else if (open[i].f_totalCost == lowestCost && open[i].g_lengthOfPath <= lowestLength)
+        {
+            lowestLength = open[i].g_lengthOfPath;
             lowestCost = open[i].f_totalCost;
             lowestCostIndex = i;
         }
     }
     *outIndex = lowestCostIndex;
-    return open.at(lowestCostIndex);
+
+    AStarCell returnValue = open.at(lowestCostIndex);
+
+    return returnValue;
 }
 
 AStar::AStarCell AStar::findCellInOpen(vec2 position)
@@ -196,6 +239,15 @@ int AStar::distanceBetweenCells(vec2 start, vec2 end)
     return sqrt(x*x + y*y)*10;
 }
 
+int AStar::manhattenDistanceBetweenCells(vec2 start, vec2 end)
+{
+
+    int x = abs(end.x - start.x);
+    int y = abs(end.y - start.y);
+    return (x + y) * 10;
+}
+
+
 
 
 void AStar::printOpenList()
@@ -222,7 +274,7 @@ void AStar::printClosedList()
     }
     if (closed.size() == 0)
     {
-        std::cout<<"Open List is empty"<<std::endl;
+        std::cout<<"Closed List is empty"<<std::endl;
     }
 }
 
@@ -230,6 +282,7 @@ void AStar::printAStarCell(AStarCell cell)
 {
     std::cout<<"position: {"<<cell.position.x<<", "<<cell.position.y<<"}, total distance: "<<cell.f_totalCost<<", distance from start: "<<cell.g_lengthOfPath<<", distance to end: "<<cell.h_distanceToEnd<<", parent position: {"<<cell.parentCellPosition.x<<", "<<cell.parentCellPosition.y<<"}"<<std::endl;
 }
+
 AStar::AStarCell AStar::createNewCell(AStarCell * parent, vec2 direction)
 {
 
@@ -238,7 +291,8 @@ AStar::AStarCell AStar::createNewCell(AStarCell * parent, vec2 direction)
     AStarCell newCell;
 
     newCell.position = {parent->position.x + direction.x, parent->position.y + direction.y};
-    newCell.h_distanceToEnd = distanceBetweenCells(newCell.position, endCell);
+    //newCell.h_distanceToEnd = (int)((float)distanceBetweenCells(newCell.position, endCell)*0.5);
+    newCell.h_distanceToEnd = manhattenDistanceBetweenCells(newCell.position, endCell);
     newCell.parentCellPosition = parent->position;
 
     int stepCost = 14;
@@ -254,7 +308,7 @@ AStar::AStarCell AStar::createNewCell(AStarCell * parent, vec2 direction)
 
 }
 
-void AStar::retracePath(AStarCell cell)
+void AStar::retrace(AStarCell cell)
 {
     std::cout<<"Retracing steps"<<std::endl;
     grid->setPositionToState(cell.position.x, cell.position.y, Grid::path);

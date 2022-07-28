@@ -9,11 +9,33 @@ GridManager::GridManager()
 
 void GridManager::start()
 {
-    //mazeGenerator->generateMaze(0, 59, true);
+    mazeGenerator->generateMaze(0, 0, false);
+    /*grid->setPositionToState(0, 0, Grid::blocked);
+    grid->setPositionToState(0, 1, Grid::blocked);
+    grid->setPositionToState(0, 2, Grid::blocked);
+    grid->setPositionToState(0, 3, Grid::blocked);
+    grid->setPositionToState(0, 4, Grid::blocked);
+    grid->setPositionToState(0, 5, Grid::blocked);
+    grid->setPositionToState(0, 6, Grid::blocked);
+    grid->setPositionToState(0, 7, Grid::blocked);
+    grid->setPositionToState(1, 0, Grid::blocked);
+    grid->setPositionToState(2, 0, Grid::blocked);
+    grid->setPositionToState(2, 1, Grid::blocked);
+    grid->setPositionToState(2, 2, Grid::blocked);
+    grid->setPositionToState(2, 3, Grid::blocked);
+    grid->setPositionToState(3, 3, Grid::blocked);
+    grid->setPositionToState(4, 3, Grid::blocked);
+    grid->setPositionToState(2, 5, Grid::blocked);
+    grid->setPositionToState(2, 6, Grid::blocked);
+    grid->setPositionToState(2, 7, Grid::blocked);
+    grid->setPositionToState(2, 5, Grid::blocked);
+    grid->setPositionToState(3, 5, Grid::blocked);
+    grid->setPositionToState(4, 5, Grid::blocked);
+    grid->setPositionToState(4, 4, Grid::blocked);
     grid->setPositionToState(1, 1, Grid::start);
-    grid->setPositionToState(14, 15, Grid::end);
-    pair<vec2, vec2> startAndEnd = {{1,1},{14,15}};
-    pathfindingManager->findPath(startAndEnd.first.x, startAndEnd.first.y, PathfindingManager::aStar, true);
+    grid->setPositionToState(5, 10, Grid::end);*/
+    //pair<vec2, vec2> startAndEnd = {{1,1},{5,10}};
+    //pathfindingManager->findPath(startAndEnd.first.x, startAndEnd.first.y, PathfindingManager::aStar, true);
 
 }
 
