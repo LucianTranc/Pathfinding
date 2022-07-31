@@ -69,4 +69,7 @@ void GridManager::draw(SDL_Renderer * renderer)
     grid->draw(renderer);
 }
 
-
+void GridManager::resetPassages()
+{
+    grid->resetPassages();
+}

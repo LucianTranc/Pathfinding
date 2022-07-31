@@ -4,9 +4,9 @@ INC_PATH = -I /Library/Frameworks/SDL2.framework/Headers -I /Library/Frameworks/
 LDFLAGS = -l SDL2-2.0.0 -l SDL2_image-2.0.0 -l SDL2_ttf-2.0.0
 
 pathfinding: main.o
-	$(CC) $(CFLAGS) $(INC_PATH) $(LDFLAGS) -framework OpengL bin/main.o bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/PathfindingManager.o bin/PathfindingAlgorithm.o bin/DepthFirstSearch.o bin/BreadthFirstSearch.o bin/AStar.o -o play
+	$(CC) $(CFLAGS) $(INC_PATH) $(LDFLAGS) -framework OpengL bin/main.o bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/PathfindingManager.o bin/PathfindingAlgorithm.o bin/DepthFirstSearch.o bin/BreadthFirstSearch.o bin/AStar.o bin/UIManager.o bin/Button.o bin/Label.o -o play
 
-main.o: main.cpp bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/PathfindingManager.o bin/PathfindingAlgorithm.o bin/DepthFirstSearch.o bin/BreadthFirstSearch.o bin/AStar.o
+main.o: main.cpp bin/Game.o bin/Grid.o bin/MazeGenerator.o bin/GridManager.o bin/PathfindingManager.o bin/PathfindingAlgorithm.o bin/DepthFirstSearch.o bin/BreadthFirstSearch.o bin/AStar.o bin/UIManager.o bin/Button.o bin/Label.o
 	$(CC) $(CFLAGS) $(INC_PATH) main.cpp -c -o bin/main.o
 
 bin/Game.o: Game.cpp Game.h
@@ -20,6 +20,15 @@ bin/MazeGenerator.o: MazeGenerator.cpp MazeGenerator.h
 
 bin/GridManager.o: GridManager.cpp GridManager.h
 	$(CC) $(CFLAGS) $(INC_PATH) GridManager.cpp -c -o bin/GridManager.o
+
+bin/UIManager.o: UIManager.cpp UIManager.h
+	$(CC) $(CFLAGS) $(INC_PATH) UIManager.cpp -c -o bin/UIManager.o
+
+bin/Button.o: Button.cpp Button.h
+	$(CC) $(CFLAGS) $(INC_PATH) Button.cpp -c -o bin/Button.o
+
+bin/Label.o: Label.cpp Label.h
+	$(CC) $(CFLAGS) $(INC_PATH) Label.cpp -c -o bin/Label.o
 
 bin/PathfindingManager.o: Pathfinding/PathfindingManager.cpp Pathfinding/PathfindingManager.h
 	$(CC) $(CFLAGS) $(INC_PATH) Pathfinding/PathfindingManager.cpp -c -o bin/PathfindingManager.o

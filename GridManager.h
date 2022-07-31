@@ -32,6 +32,7 @@ public:
     void update();
     void draw(SDL_Renderer * renderer);
     std::pair<vec2, vec2> setStartAndEndCells();
+    void resetPassages();
 
 private:
     Grid * grid;

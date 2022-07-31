@@ -25,6 +25,7 @@ public:
     Grid(int x, int y, int w, int h, int grid_x, int grid_y);
     void setGridArray(vector<vector<int>> array);
 	void setGridToState(State state);
+    void resetPassages();
 	void randomizeGrid();
 	bool setPositionToState(int x, int y, State state);
 	pair<int, int> setRandomPositionToState(State state);
@@ -48,10 +49,10 @@ private:
         { frontier  , {255, 255,   0, 255} },
         { start     , {  0, 255,   0, 255} },
         { end       , {255,   0,   0, 255} },
-        { inQueue   , {255,   0, 255, 255} },
+        { inQueue   , {131, 162, 247, 255} },
         { searched  , {110, 200, 255, 255} },
         { path      , {255, 145,   0, 255} },
-        { open      , {255,   0, 255, 255} },
+        { open      , {131, 162, 247, 255} },
         { closed    , {110, 200, 255, 255} }
     } ;
 

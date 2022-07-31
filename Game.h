@@ -11,8 +11,10 @@
 #include <map>
 #include <string>
 #include "GridManager.h"
+#include "UIManager.h"
 
 class GridManager;
+class UIManager;
 
 class Game
 
@@ -32,11 +34,18 @@ public:
 	void render();
 	void clean();
 
+	void ButtonOneCallback();
+	void ButtonTwoCallback();
+	void ButtonThreeCallback();
+
 	GridManager * gridManager;
+	UIManager * uiManager;
 
 	static SDL_Renderer *renderer;
 	static SDL_Event event;
 	static bool isRunning;
+
+
 
 private:
 

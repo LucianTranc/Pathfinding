@@ -22,6 +22,20 @@ void Grid::setGridToState(State state)
     }
 }
 
+void Grid::resetPassages()
+{
+    for (int i = 0; i < gridArray.size(); i++)
+    {
+        for (int j = 0; j < gridArray[i].size(); j++)
+        {
+            if (gridArray[i][j] != blocked)
+            {
+                gridArray[i][j] = passage;
+            }
+        }
+    }
+}
+
 void Grid::randomizeGrid()
 {
     std::cout<<"randomizing grid"<<std::endl;
