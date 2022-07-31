@@ -42,9 +42,8 @@ void AStar::update()
         if (current.position == endCell)
         {
             grid->setPositionToState(current.position.x, current.position.y, Grid::end);
-            retrace(current);
+            path = retracePath(current);
             pathFound = true;
-            active = false;
             return;
         }
         if (grid->isStateAtPosition(current.position.x, current.position.y, Grid::open))
@@ -91,6 +90,17 @@ void AStar::update()
                 }
             }        
         }
+    }
+    else if (active && pathFound)
+    {
+        if (path.size() == 0)
+        {
+            active = false;
+            return;
+        }
+        vec2 nextPathStep = path[path.size()-1];
+        path.pop_back();
+        grid->setPositionToState(nextPathStep.x, nextPathStep.y, Grid::path);
     }
 }
 
@@ -217,10 +227,14 @@ AStar::AStarCell AStar::createNewCell(AStarCell * parent, vec2 direction)
 
 }
 
-void AStar::retrace(AStarCell cell)
+vector<vec2> AStar::retracePath(AStarCell cell)
 {
     vec2 parentCellPosition = cell.parentCellPosition;
     AStarCell currentCell = cell;
+    vector<vec2> path;
+
+    //path.push_back(currentCell.position);
+    path.push_back(parentCellPosition);
 
     while (parentCellPosition != startCell)
     {
@@ -228,11 +242,16 @@ void AStar::retrace(AStarCell cell)
         {
             if (closed[i].position == parentCellPosition)
             {
-                grid->setPositionToState(parentCellPosition.x, parentCellPosition.y, Grid::path);
+                //grid->setPositionToState(parentCellPosition.x, parentCellPosition.y, Grid::path);
                 currentCell = closed[i];
+                path.push_back(currentCell.parentCellPosition);
                 break;
             }
         }
         parentCellPosition = currentCell.parentCellPosition;
     }
+
+    path.pop_back();
+
+    return path;
 }

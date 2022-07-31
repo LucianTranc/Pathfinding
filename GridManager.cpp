@@ -28,11 +28,6 @@ void GridManager::update()
     if (pathfindingManager->active)
     {
         pathfindingManager->update();
-
-        if (pathfindingManager->pathFound)
-        {
-            // return a list containing the path
-        }
     }
 }
 

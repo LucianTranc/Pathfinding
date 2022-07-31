@@ -33,7 +33,7 @@ private:
 
     void addNeighboursToQueue(Cell cell);
     bool endFound(Cell cell);
-    void retracePath(Cell cell);
+    vector<vec2> retracePath(Cell cell);
 
     vector<Cell> searched;
     deque<Cell> deque;

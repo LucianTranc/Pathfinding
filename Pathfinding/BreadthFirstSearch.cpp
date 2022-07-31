@@ -62,9 +62,8 @@ void BreadthFirstSearch::update()
 
             if (endFound(popped))
             {
-                retracePath(popped);
+                path = retracePath(popped);
                 pathFound = true;
-                active = false;
                 return;
             }
 
@@ -78,14 +77,29 @@ void BreadthFirstSearch::update()
             active = false;
         }   
     }
+    if (active && pathFound)
+    {
+        if (path.size() == 0)
+        {
+            active = false;
+            return;
+        }
+        vec2 nextPathStep = path[path.size()-1];
+        path.pop_back();
+        grid->setPositionToState(nextPathStep.x, nextPathStep.y, Grid::path);
+    }
 }
 
-void BreadthFirstSearch::retracePath(Cell cell)
+vector<vec2> BreadthFirstSearch::retracePath(Cell cell)
 {
-    grid->setPositionToState(cell.position.x, cell.position.y, Grid::path);
+    //grid->setPositionToState(cell.position.x, cell.position.y, Grid::path);
 
     vec2 parentCellPosition = cell.parentCellPosition;
     Cell currentCell = cell;
+    vector<vec2> path;
+
+    path.push_back(currentCell.position);
+    path.push_back(parentCellPosition);
 
     while (parentCellPosition != startCell)
     {
@@ -93,13 +107,18 @@ void BreadthFirstSearch::retracePath(Cell cell)
         {
             if (searched[i].position == parentCellPosition)
             {
-                grid->setPositionToState(parentCellPosition.x, parentCellPosition.y, Grid::path);
+                //grid->setPositionToState(parentCellPosition.x, parentCellPosition.y, Grid::path);
                 currentCell = searched[i];
+                path.push_back(currentCell.parentCellPosition);
                 break;
             }
         }
         parentCellPosition = currentCell.parentCellPosition;
     }
+
+    path.pop_back();
+    
+    return path;
 }
 
 bool BreadthFirstSearch::endFound(Cell cell)

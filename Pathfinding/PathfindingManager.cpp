@@ -62,9 +62,14 @@ void PathfindingManager::findPath(int x, int y, Algorithm algorithmName, bool an
 
 void PathfindingManager::update()
 {
-    if (activeAlgorithm->isActive() && !activeAlgorithm->isPathFound())
+    if (activeAlgorithm->isActive())
     {
         activeAlgorithm->update();
+
+        if (activeAlgorithm->isPathFound())
+        {
+
+        }
     }
     else if (!activeAlgorithm->isActive())
     {

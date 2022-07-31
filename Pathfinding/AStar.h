@@ -43,7 +43,7 @@ private:
     void printClosedList();
     void printAStarCell(AStarCell cell);
     AStarCell createNewCell(AStarCell * parent, vec2 direction);
-    void retrace(AStarCell cell);
+    vector<vec2> retracePath(AStarCell cell);
 
     vec2 startCell;
     vec2 endCell;
