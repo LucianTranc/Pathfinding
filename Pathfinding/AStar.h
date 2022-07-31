@@ -27,7 +27,7 @@ public:
         vec2 parentCellPosition;
     } typedef AStarCell;
 
-    AStar(Grid * g);
+    AStar(Grid * g, bool h);
     void initializeAlgorithm(int x, int y, bool animate);
     void update();
     ~AStar() {};
@@ -35,10 +35,8 @@ public:
 
 private:
 
-    int distanceBetweenCells(vec2 start, vec2 end);
     int manhattenDistanceBetweenCells(vec2 start, vec2 end);
     AStarCell findCellInOpenWithLowestCost(int * outIndex);
-    AStarCell findCellInOpen(vec2 position);
     bool isInClosedList(vec2 cell);
     bool isInOpenList(vec2 cell, int * index = nullptr);
     void printOpenList();
@@ -51,5 +49,6 @@ private:
     vec2 endCell;
     vector<AStarCell> open;
     vector<AStarCell> closed;
+    bool heuristic;
 
 };

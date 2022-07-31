@@ -39,5 +39,5 @@ protected:
     bool pathFound;
     bool active;
     Grid * grid;
-
+    vector<vec2> path;
 };

@@ -53,34 +53,30 @@ void BreadthFirstSearch::update()
 {
     if (active && !pathFound)
     {
-        for (int i = 0; i < 5; i++)
+        if (deque.size() > 0)
         {
-            if (deque.size() > 0)
+            Cell popped = deque.front();
+            deque.pop_front();           
+
+            grid->setPositionToState(popped.position.x, popped.position.y, Grid::searched);
+
+            if (endFound(popped))
             {
-                Cell popped = deque.front();
-                deque.pop_front();           
-
-                grid->setPositionToState(popped.position.x, popped.position.y, Grid::searched);
-
-                if (endFound(popped))
-                {
-                    retracePath(popped);
-                    pathFound = true;
-                    active = false;
-                    return;
-                }
-
-                addNeighboursToQueue(popped);
-
-                searched.push_back(popped);
-            }
-            else
-            {
-                pathFound = false;
+                retracePath(popped);
+                pathFound = true;
                 active = false;
+                return;
             }
+
+            addNeighboursToQueue(popped);
+
+            searched.push_back(popped);
         }
-   
+        else
+        {
+            pathFound = false;
+            active = false;
+        }   
     }
 }
 

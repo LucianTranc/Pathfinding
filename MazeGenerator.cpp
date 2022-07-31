@@ -41,23 +41,21 @@ void MazeGenerator::update()
 {
     if (active && !generationComplete)
     {
-        for (int i = 0; i < 5; i++)
-        {
-            if (frontierCells.size() > 0)
-            {
-                vec2 poppedFrontierCell;
 
-                if (popRandomFrontierCell(&poppedFrontierCell))
-                {
-                    computeFrontierCells(poppedFrontierCell);
-                    makePassage(poppedFrontierCell);
-                }
-            }
-            else
+        if (frontierCells.size() > 0)
+        {
+            vec2 poppedFrontierCell;
+
+            if (popRandomFrontierCell(&poppedFrontierCell))
             {
-                generationComplete = true;
-                active = false;
+                computeFrontierCells(poppedFrontierCell);
+                makePassage(poppedFrontierCell);
             }
+        }
+        else
+        {
+            generationComplete = true;
+            active = false;
         }
     }
 }

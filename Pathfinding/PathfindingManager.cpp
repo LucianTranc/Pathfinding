@@ -35,7 +35,17 @@ void PathfindingManager::findPath(int x, int y, Algorithm algorithmName, bool an
         {
             active = true;
 
-            activeAlgorithm = new AStar(grid);
+            activeAlgorithm = new AStar(grid, true);
+
+            activeAlgorithm->initializeAlgorithm(x, y, animate);
+            
+            break;
+        }
+        case Dijkstra:
+        {
+            active = true;
+
+            activeAlgorithm = new AStar(grid, false);
 
             activeAlgorithm->initializeAlgorithm(x, y, animate);
             
