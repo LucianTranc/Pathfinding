@@ -23,7 +23,7 @@ void GridManager::start()
 
 void GridManager::generateMaze()
 {
-    mazeGenerator->generateMaze(0, 0, true);
+    mazeGenerator->generateMaze(28, 28, true);
 }
 
 void GridManager::triggerAStar()

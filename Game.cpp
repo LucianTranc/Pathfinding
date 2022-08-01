@@ -54,38 +54,43 @@ void Game::createGameObjects()
 	gridManager = new GridManager();
 	uiManager = new UIManager();
 
-	uiManager->addButton(650, 0, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::generateMaze);
-	uiManager->addLabel(650, 0, 100, 40, "generate maze", {255,0,255});
+	int d = 80;
+	int p = 250;
 
-	uiManager->addButton(650, 50, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerDijkstra);
-	uiManager->addLabel(650, 50, 100, 40, "Dijkstra", {255,0,255});
+	uiManager->addButton(600, 12, 190, 40, {42,99,46,255}, {50,120,55,255}, {26,64,29,255}, gridManager, &GridManager::generateMaze);
+	uiManager->addLabel(610, 12, 170, 40, "Generate Maze", {255,255,255});
+
+	uiManager->addLabel(600, d, 170, 30, "Drawing Options:", {0, 0, 0});
+
+	uiManager->addButton(600, d + 40, 90, 40, {0,0,0,255}, {25,25,25,255}, {0,0,0,255}, gridManager, &GridManager::drawStateBlocked);
+
+	uiManager->addButton(700, d + 40, 90, 40, {255,255,255,255}, {230,230,230,255}, {255,255,255,255}, gridManager, &GridManager::drawStatePassage);
+
+	uiManager->addButton(600, d + 90, 90, 40, {0,255,0,255}, {75,255,75,255}, {0,235,0,255}, gridManager, &GridManager::drawStateStart);
+
+	uiManager->addButton(700, d + 90, 90, 40, {255,0,0,255}, {255,75,75,255}, {235,0,0,255}, gridManager, &GridManager::drawStateEnd);
+
+	uiManager->addLabel(600, p, 130, 30, "Pathfinding:", {0, 0, 0});
+
+	uiManager->addButton(600, p + 40, 190, 40, {42,99,46,255}, {50,120,55,255}, {26,64,29,255}, gridManager, &GridManager::triggerDijkstra);
+	uiManager->addLabel(610, p + 40, 100, 40, "Dijkstra", {255,255,255});
 	
-	uiManager->addButton(650, 100, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerAStar);
-	uiManager->addLabel(650, 100, 100, 40, "AStar", {255,0,255});
+	uiManager->addButton(600, p + 90, 190, 40, {42,99,46,255}, {50,120,55,255}, {26,64,29,255}, gridManager, &GridManager::triggerAStar);
+	uiManager->addLabel(610, p + 90, 70, 40, "AStar", {255,255,255});
 	
-	uiManager->addButton(650, 150, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerBFS);
-	uiManager->addLabel(650, 150, 100, 40, "BFS", {255,0,255});
+	uiManager->addButton(600, p + 140, 190, 40, {42,99,46,255}, {50,120,55,255}, {26,64,29,255}, gridManager, &GridManager::triggerBFS);
+	uiManager->addLabel(610, p + 140, 50, 40, "BFS", {255,255,255});
 
-	uiManager->addButton(650, 200, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerDFS);
-	uiManager->addLabel(650, 200, 100, 40, "DFS", {255,0,255});
+	uiManager->addButton(600, p + 190, 190, 40, {42,99,46,255}, {50,120,55,255}, {26,64,29,255}, gridManager, &GridManager::triggerDFS);
+	uiManager->addLabel(610, p + 190, 50, 40, "DFS", {255,255,255});
 
-	uiManager->addButton(650, 250, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::resetPassages);
-	uiManager->addLabel(650, 250, 100, 40, "reset", {255,0,255});
+	uiManager->addButton(600, 548, 90, 40, {42,99,46,255}, {50,120,55,255}, {26,64,29,255}, gridManager, &GridManager::resetPassages);
+	uiManager->addLabel(610, 548, 70, 40, "Reset", {255,255,255});
 
-	uiManager->addButton(650, 300, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::clearGrid);
-	uiManager->addLabel(650, 300, 100, 40, "clear", {255,0,255});
+	uiManager->addButton(700, 548, 90, 40, {42,99,46,255}, {50,120,55,255}, {26,64,29,255}, gridManager, &GridManager::clearGrid);
+	uiManager->addLabel(710, 548, 70, 40, "Clear", {255,255,255});
 
-	uiManager->addButton(650, 400, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStateBlocked);
-	uiManager->addLabel(650, 400, 100, 40, "draw blocked", {255,0,255});
-
-	uiManager->addButton(650, 450, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStatePassage);
-	uiManager->addLabel(650, 450, 100, 40, "draw passage", {255,0,255});
-
-	uiManager->addButton(650, 500, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStateStart);
-	uiManager->addLabel(650, 500, 100, 40, "draw start", {255,0,255});
-
-	uiManager->addButton(650, 550, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStateEnd);
-	uiManager->addLabel(650, 550, 100, 40, "draw end", {255,0,255});
+	
 }
 
 void Game::start()
@@ -123,7 +128,7 @@ void Game::update()
 
 void Game::render() 
 {
-    SDL_SetRenderDrawColor( Game::renderer, 255, 255, 255, 255 );
+    SDL_SetRenderDrawColor( Game::renderer, 219, 219, 219, 255 );
 
 	SDL_RenderClear(renderer);
 

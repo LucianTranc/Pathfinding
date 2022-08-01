@@ -12,7 +12,7 @@ TTF_Font * UIManager::ariel = nullptr;
 
 UIManager::UIManager()
 {
-    ariel = TTF_OpenFont("assets/arial.ttf", 60);
+    ariel = TTF_OpenFont("assets/arial.ttf", 100);
     if (ariel == nullptr)
     {
         std::cout<<"ariel not found"<<std::endl;
@@ -71,7 +71,7 @@ void UIManager::getInputState()
 
 void UIManager::addButton(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3,  GridManager * gridManager, void (GridManager::*onClick)())
 {
-    buttons.push_back(new Button(x, y, w, h, c_1, c_2, c_3, gridManager, onClick));
+    buttons.push_back(new Button(x, y, w, h, 2, c_1, c_2, c_3, gridManager, onClick));
 }
 
 void UIManager::addLabel(int x, int y, int w, int h, string t, SDL_Color c)

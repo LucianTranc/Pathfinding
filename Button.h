@@ -27,7 +27,7 @@ public:
 
     enum State {normal, hover, pressed};
 
-    Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, GridManager * gridManager, void (GridManager::*f)());
+    Button(int x, int y, int w, int h, int b, vec4 c_1, vec4 c_2, vec4 c_3, GridManager * gridManager, void (GridManager::*f)());
     void draw(SDL_Renderer * renderer);
     void update();
 
@@ -41,7 +41,10 @@ private:
     vec4 pushedColour;
     vec4 activeColour;
 
+    int boarderWidth;
+
     SDL_Rect rect;
+    SDL_Rect boarderRect;
 
     State state = normal;
 

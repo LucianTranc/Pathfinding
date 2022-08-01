@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, GridManager * gridManager, void (GridManager::*f)())
+Button::Button(int x, int y, int w, int h, int b, vec4 c_1, vec4 c_2, vec4 c_3, GridManager * gridManager, void (GridManager::*f)())
 {
     position = vec2(x, y);
     size = vec2(w, h);
@@ -14,6 +14,13 @@ Button::Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, GridMan
     rect.w = size.x;
     rect.h = size.y;
 
+    boarderWidth = b;
+
+    boarderRect.x = position.x - boarderWidth;
+    boarderRect.y = position.y - boarderWidth;
+    boarderRect.w = size.x + (2 * boarderWidth);
+    boarderRect.h = size.y + (2 * boarderWidth);
+    
     gridManagerReference = gridManager;
 
     onClick = f;
@@ -21,8 +28,10 @@ Button::Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, GridMan
 
 void Button::draw(SDL_Renderer * renderer)
 {    
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderFillRect(renderer, &boarderRect );
+
     SDL_SetRenderDrawColor(renderer, activeColour.r, activeColour.g, activeColour.b, activeColour.a);
-    
     SDL_RenderFillRect(renderer, &rect );
 }
 
