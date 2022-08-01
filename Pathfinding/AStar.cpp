@@ -63,7 +63,7 @@ void AStar::update()
             if (grid->isStateAtPosition(neighbourPosition.x, neighbourPosition.y, Grid::blocked) ||
                 isInClosedList(neighbourPosition) ||
                 (neighbourPosition.x < 0 || neighbourPosition.y < 0) ||
-                (neighbourPosition.x > 79 || neighbourPosition.y > 59))
+                (neighbourPosition.x > 56 || neighbourPosition.y > 56))
             {
                 continue;
             }

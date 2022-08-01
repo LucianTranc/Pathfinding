@@ -19,7 +19,7 @@ using glm::vec2;
 using glm::vec3;
 using glm::vec4;
 
-class Game;
+class GridManager;
 
 class Button {
 
@@ -27,7 +27,7 @@ public:
 
     enum State {normal, hover, pressed};
 
-    Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, Game * game, void (Game::*f)());
+    Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, GridManager * gridManager, void (GridManager::*f)());
     void draw(SDL_Renderer * renderer);
     void update();
 
@@ -45,8 +45,8 @@ private:
 
     State state = normal;
 
-    Game * gameReference;
+    GridManager * gridManagerReference;
 
-    void (Game::*onClick)();
+    void (GridManager::*onClick)();
 
 };

@@ -22,7 +22,7 @@ public:
 
     enum State {passage, blocked, frontier, start, end, inQueue, searched, path, open, closed} ;
 
-    Grid(int x, int y, int w, int h, int grid_x, int grid_y);
+    Grid(int x, int y, int w, int h, int grid_x, int grid_y, int boarder);
     void setGridArray(vector<vector<int>> array);
 	void setGridToState(State state);
     void resetPassages();
@@ -34,6 +34,7 @@ public:
     void printGrid();
     bool getCellWithState(vec2 * outCell, State state);
     vector<vector<int>> gridArray;
+    vec2 screenToGridPosition(int x, int y);
 
 
 private:
@@ -42,6 +43,9 @@ private:
     vec2 size;
     vec2 gridSize;
     float scale;
+    int boarderWidth;
+
+    SDL_Rect boarderRect;
 
     std::map<State, vec4> colourMap = {
         { passage   , {255, 255, 255, 255} },

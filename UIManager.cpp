@@ -2,6 +2,7 @@
 
 int UIManager::mousex = 0;
 int UIManager::mousey = 0;
+bool UIManager::mousedown = false;
 const Uint8* UIManager::keystates = nullptr;
 SDL_Event UIManager::event;
 Button * UIManager::pressedButton = nullptr;
@@ -16,6 +17,19 @@ UIManager::UIManager()
     {
         std::cout<<"ariel not found"<<std::endl;
     }
+}
+
+UIManager::~UIManager()
+{
+    for (auto & b : buttons)
+    {
+    	delete b;
+	}
+
+    for (auto & l : labels)
+    {
+    	delete l;
+	}
 }
 
 void UIManager::start()
@@ -39,6 +53,12 @@ void UIManager::getInputState()
         case SDL_QUIT:
             isRunning = false;
             break;
+        case SDL_MOUSEBUTTONDOWN:
+            mousedown = true;
+            break;
+        case SDL_MOUSEBUTTONUP:
+            mousedown = false;
+            break;
         default:
             break;
     }
@@ -49,9 +69,9 @@ void UIManager::getInputState()
     SDL_GetMouseState(&mousex, &mousey);
 }
 
-void UIManager::addButton(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, Game * game, void (Game::*onClick)())
+void UIManager::addButton(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3,  GridManager * gridManager, void (GridManager::*onClick)())
 {
-    buttons.push_back(new Button(x, y, w, h, c_1, c_2, c_3, game, onClick));
+    buttons.push_back(new Button(x, y, w, h, c_1, c_2, c_3, gridManager, onClick));
 }
 
 void UIManager::addLabel(int x, int y, int w, int h, string t, SDL_Color c)

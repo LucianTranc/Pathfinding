@@ -34,10 +34,6 @@ public:
 	void render();
 	void clean();
 
-	void ButtonOneCallback();
-	void ButtonTwoCallback();
-	void ButtonThreeCallback();
-
 	GridManager * gridManager;
 	UIManager * uiManager;
 

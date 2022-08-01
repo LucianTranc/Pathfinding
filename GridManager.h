@@ -9,6 +9,7 @@
 #include <SDL_ttf.h>
 #include "Grid.h"
 #include "MazeGenerator.h"
+#include "DrawingController.h"
 #include "Pathfinding/PathfindingManager.h"
 
 using std::string;
@@ -22,20 +23,38 @@ using glm::vec4;
 class Grid;
 class MazeGenerator;
 class PathfindingManager;
+class DrawingController;
 
 class GridManager {
 
 public:
 
     GridManager();
+    ~GridManager();
+
     void start();
     void update();
     void draw(SDL_Renderer * renderer);
-    std::pair<vec2, vec2> setStartAndEndCells();
     void resetPassages();
+    void clearGrid();
+    void generateMaze();
+    void triggerAStar();
+    void triggerDijkstra();
+    void triggerDFS();
+    void triggerBFS();
+    void drawingOn();
+    void drawingOff();
+    void drawStatePassage();
+    void drawStateBlocked();
+    void drawStateStart();
+    void drawStateEnd();
+    
+
+
 
 private:
     Grid * grid;
     MazeGenerator * mazeGenerator;
     PathfindingManager * pathfindingManager;
+    DrawingController * drawingController;
 };

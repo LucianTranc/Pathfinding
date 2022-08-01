@@ -68,11 +68,11 @@ void PathfindingManager::update()
 
         if (activeAlgorithm->isPathFound())
         {
-
         }
     }
     else if (!activeAlgorithm->isActive())
     {
+        delete activeAlgorithm;
         active = false;
     }
 }

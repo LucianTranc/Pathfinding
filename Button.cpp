@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, Game * game, void (Game::*f)())
+Button::Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, GridManager * gridManager, void (GridManager::*f)())
 {
     position = vec2(x, y);
     size = vec2(w, h);
@@ -14,7 +14,7 @@ Button::Button(int x, int y, int w, int h, vec4 c_1, vec4 c_2, vec4 c_3, Game * 
     rect.w = size.x;
     rect.h = size.y;
 
-    gameReference = game;
+    gridManagerReference = gridManager;
 
     onClick = f;
 }
@@ -32,7 +32,7 @@ void Button::update()
     {
         if (UIManager::event.type == SDL_MOUSEBUTTONUP)
         {
-            (gameReference->*onClick)();
+            (gridManagerReference->*onClick)();
 
             UIManager::pressedButton = nullptr;
 

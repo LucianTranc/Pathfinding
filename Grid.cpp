@@ -1,11 +1,17 @@
 #include "Grid.h"
 
 
-Grid::Grid(int x, int y, int w, int h, int grid_x, int grid_y) : gridArray(grid_x, vector<int> (grid_y, 0))
+Grid::Grid(int x, int y, int w, int h, int grid_x, int grid_y, int boarder) : gridArray(grid_x, vector<int> (grid_y, 0))
 {
     position = vec2(x, y);
     size = vec2(w, h);
     gridSize = vec2(grid_x, grid_y);
+    boarderWidth = boarder;
+
+    boarderRect.x = position.x - boarderWidth;
+    boarderRect.y = position.y - boarderWidth;
+    boarderRect.w = size.x + (2 * boarderWidth);
+    boarderRect.h = size.y + (2 * boarderWidth);
 
     srand(time(0));
 
@@ -28,7 +34,7 @@ void Grid::resetPassages()
     {
         for (int j = 0; j < gridArray[i].size(); j++)
         {
-            if (gridArray[i][j] != blocked)
+            if (gridArray[i][j] != blocked && gridArray[i][j] != start && gridArray[i][j] != end)
             {
                 gridArray[i][j] = passage;
             }
@@ -79,6 +85,20 @@ std::pair<int, int> Grid::setRandomPositionToState(State state)
 
 bool Grid::setPositionToState(int x, int y, State state)
 {
+    if (state == start || state == end)
+    {
+        for (int i = 0; i < gridArray.size(); i++)
+        {
+            for (int j = 0; j < gridArray[i].size(); j++)
+            {
+                if (gridArray[i][j] == state)
+                {
+                    gridArray[i][j] = passage;
+                }
+            }
+        }
+    }
+
     if ((x >= 0 && x < gridSize.x) && (y >= 0 && y < gridSize.y))
     {
         gridArray[x][y] = state;
@@ -100,8 +120,32 @@ bool Grid::isStateAtPosition(int x, int y, State state)
 }
 
 
+vec2 Grid::screenToGridPosition(int x, int y)
+{
+    vec2 gridPosition;
+    vec2 cellSize = vec2(size.x/gridSize.x, size.y/gridSize.y);
+
+    if ((x >= position.x && x <= (position.x + size.x)) &&
+        (y >= position.y && y <= (position.y + size.y)))
+    {
+        gridPosition = {(int)((x - position.x)/cellSize.x), (int)((y - position.y)/cellSize.y)};
+    }
+    else
+    {
+        gridPosition = {-1, -1};
+    }
+
+    return gridPosition;
+}
+
+
 void Grid::draw(SDL_Renderer * renderer)
 {
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+            
+    SDL_RenderFillRect(renderer, &boarderRect );
+
     vec2 cellSize = vec2(size.x/gridSize.x, size.y/gridSize.y);
 
     //std::cout<<"draw"<<std::endl;

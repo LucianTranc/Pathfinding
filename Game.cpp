@@ -8,7 +8,11 @@ bool Game::isRunning = false;
 
 
 Game::Game() {}
-Game::~Game() {}
+
+Game::~Game() {
+	delete gridManager;
+	delete uiManager;
+}
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
@@ -45,31 +49,43 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 }
 
-void Game::ButtonOneCallback()
-{
-	std::cout<<"button one"<<std::endl;
-	gridManager->resetPassages();
-}
-
-void Game::ButtonTwoCallback()
-{
-	std::cout<<"button two"<<std::endl;
-}
-
-void Game::ButtonThreeCallback()
-{
-	std::cout<<"button three"<<std::endl;
-}
-
 void Game::createGameObjects()
 {
 	gridManager = new GridManager();
 	uiManager = new UIManager();
 
-	uiManager->addButton(650, 100, 100, 50, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, this, &Game::ButtonOneCallback);
-	uiManager->addButton(650, 200, 100, 50, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, this, &Game::ButtonTwoCallback);
-	uiManager->addButton(650, 300, 100, 50, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, this, &Game::ButtonThreeCallback);
-	uiManager->addLabel(650, 300, 100, 50, "example", {255,0,255});
+	uiManager->addButton(650, 0, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::generateMaze);
+	uiManager->addLabel(650, 0, 100, 40, "generate maze", {255,0,255});
+
+	uiManager->addButton(650, 50, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerDijkstra);
+	uiManager->addLabel(650, 50, 100, 40, "Dijkstra", {255,0,255});
+	
+	uiManager->addButton(650, 100, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerAStar);
+	uiManager->addLabel(650, 100, 100, 40, "AStar", {255,0,255});
+	
+	uiManager->addButton(650, 150, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerBFS);
+	uiManager->addLabel(650, 150, 100, 40, "BFS", {255,0,255});
+
+	uiManager->addButton(650, 200, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::triggerDFS);
+	uiManager->addLabel(650, 200, 100, 40, "DFS", {255,0,255});
+
+	uiManager->addButton(650, 250, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::resetPassages);
+	uiManager->addLabel(650, 250, 100, 40, "reset", {255,0,255});
+
+	uiManager->addButton(650, 300, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::clearGrid);
+	uiManager->addLabel(650, 300, 100, 40, "clear", {255,0,255});
+
+	uiManager->addButton(650, 400, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStateBlocked);
+	uiManager->addLabel(650, 400, 100, 40, "draw blocked", {255,0,255});
+
+	uiManager->addButton(650, 450, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStatePassage);
+	uiManager->addLabel(650, 450, 100, 40, "draw passage", {255,0,255});
+
+	uiManager->addButton(650, 500, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStateStart);
+	uiManager->addLabel(650, 500, 100, 40, "draw start", {255,0,255});
+
+	uiManager->addButton(650, 550, 100, 40, {150,0,0,255}, {0,150,0,255}, {0,0,150,255}, gridManager, &GridManager::drawStateEnd);
+	uiManager->addLabel(650, 550, 100, 40, "draw end", {255,0,255});
 }
 
 void Game::start()
