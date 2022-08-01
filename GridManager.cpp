@@ -28,6 +28,8 @@ void GridManager::generateMaze()
 
 void GridManager::triggerAStar()
 {
+    resetPassages();
+
     vec2 startCell, endCell;
 
     if (grid->getCellWithState(&startCell, Grid::start) && grid->getCellWithState(&endCell, Grid::end))
@@ -38,6 +40,8 @@ void GridManager::triggerAStar()
 
 void GridManager::triggerDijkstra()
 {
+    resetPassages();
+
     vec2 startCell, endCell;
 
     if (grid->getCellWithState(&startCell, Grid::start) && grid->getCellWithState(&endCell, Grid::end))
@@ -48,6 +52,8 @@ void GridManager::triggerDijkstra()
 
 void GridManager::triggerDFS()
 {
+    resetPassages();
+
     vec2 startCell, endCell;
 
     if (grid->getCellWithState(&startCell, Grid::start) && grid->getCellWithState(&endCell, Grid::end))
@@ -58,6 +64,8 @@ void GridManager::triggerDFS()
 
 void GridManager::triggerBFS()
 {
+    resetPassages();
+
     vec2 startCell, endCell;
 
     if (grid->getCellWithState(&startCell, Grid::start) && grid->getCellWithState(&endCell, Grid::end))

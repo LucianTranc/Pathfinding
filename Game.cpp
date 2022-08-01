@@ -121,7 +121,12 @@ void Game::handleEvents()
 
 void Game::update()
 {
+	// updating 4 times to speed up algorithm while still only rendering 30 fps
 	gridManager->update();
+	gridManager->update();
+	gridManager->update();
+	gridManager->update();
+
 	uiManager->update();
 }
 
